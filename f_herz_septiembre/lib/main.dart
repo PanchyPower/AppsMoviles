@@ -7,68 +7,564 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-   
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-   
-    return Scaffold(
-      appBar: AppBar(
-       
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        
-        title: Text(widget.title),
-      ),
-      body: Center(
-        
-        child: Column(
+      title: 'Superficies con bordes redondeados',
+      home: Scaffold(
+        appBar: AppBar(
           
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+          title: const Text('Tu red     Inspiración', style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
+          backgroundColor: const Color.fromARGB(255, 255, 243, 226),
+        ),
+
+        
+        
+
+
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+
+          child: Column(
+
+            children: [
+
+              const SizedBox(height: 8),
+
+              Row(
+              children: [
+
+                Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Tortilla de lentejas y cebolla',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
-          ],
+           ),
+
+              Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Cupcake Cheesecake Kinder',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+           ),
+
+                
+              ],
+            ),
+
+
+
+            const SizedBox(height: 8),
+              
+              Row(
+              children: [
+
+                Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Flan casero',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+           ),
+
+              Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Cupcake Cheesecake Kinder',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+           ),
+
+                
+              ],
+            ),
+
+
+
+            const SizedBox(height: 8),
+              
+              Row(
+              children: [
+
+                Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Cupcake Cheesecake Kinder',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+           ),
+
+              Expanded(
+                  child: Card(
+              elevation: 2.0,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+
+                  Container(
+                    height: 200,
+                    color: const Color.fromARGB(255, 197, 197, 197),
+                    width: double.infinity,
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue,
+                        ),
+                        SizedBox(width: 12),
+                        Text(
+                          'Cookei',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                    child: Text(
+                      'Cupcake Cheesecake Kinder',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0),
+                    child: Text(
+                      'Hace 9 horas',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('😋'),
+                          ),
+                        ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('❤️'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Acción cuando se presiona el botón
+                            },
+                            child: const Text('👏'),
+                          ),
+                      ],
+                    ),
+
+                        ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+           ),
+
+                
+              ],
+            ),
+
+
+
+
+            ], //Children columna
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
