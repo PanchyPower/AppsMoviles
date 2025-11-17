@@ -12,7 +12,20 @@
           "package_name": "com.example.reina_emprende"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "679277996918-n0oq4bkcsbeb4b7r2rbm6as75qr1opi7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.reina_emprende",
+            "certificate_hash": "e4fc2b78d41d0bd0e5b54c0736b86ee91df77038"
+          }
+        },
+        {
+          "client_id": "679277996918-ma9jg65c01vkqbkrcuaohsp2o5umpb5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDXioImXW17TtypBK_Rg-Km8EdXFZqWqD4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679277996918-ma9jg65c01vkqbkrcuaohsp2o5umpb5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
