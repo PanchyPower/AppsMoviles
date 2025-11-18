@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:reina_emprende/screens/splash.dart';
-import 'package:reina_emprende/screens/comunidad.dart';
 import 'package:reina_emprende/screens/login.dart';
+import 'package:reina_emprende/screens/intro.dart';
 import 'package:reina_emprende/theme/theme.dart';
 
 Future<void> main() async {
@@ -72,7 +72,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const ComunidadScreen(),
+      body: const IntroScreen(),
     );
   }
 }

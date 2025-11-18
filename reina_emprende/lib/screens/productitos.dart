@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reina_emprende/screens/comunidad.dart';
+import 'package:reina_emprende/screens/foro.dart';
 import 'package:reina_emprende/screens/detalles_productitos.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -13,13 +14,13 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
-  int _currentIndex = 2;  // Ajustado: 0 = Otros, 1 = Chats, 2 = Buscar
+  int _currentIndex = 2;  // Ajustado: 0 = Foro, 1 = Comunidad, 2 = Buscar
 
 void _onTabTapped(int index) {
   if (index == 0) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const PlaceholderScreen()),
+      MaterialPageRoute(builder: (_) => const ForoScreen()),
     );
   } else if (index == 1) {
     Navigator.pushReplacement(
@@ -387,11 +388,11 @@ void _onTabTapped(int index) {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.category),
-            label: 'Otros',
+            label: 'Foro',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chats',
+            label: 'Comunidad',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),

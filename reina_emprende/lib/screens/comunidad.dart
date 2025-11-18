@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reina_emprende/screens/login.dart';
+import 'package:reina_emprende/screens/foro.dart';
 import 'productitos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,7 +27,7 @@ class _ChatsScreenState extends State<ComunidadScreen> {
 } else {
   Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (_) => const PlaceholderScreen()),
+    MaterialPageRoute(builder: (_) => const ForoScreen()),
   );
 }
 
@@ -43,8 +44,9 @@ class _ChatsScreenState extends State<ComunidadScreen> {
     }
   }
 
-  void _addContact(BuildContext context) async {
-    final nameController = TextEditingController();
+  void _addPublicacion(BuildContext context) async {
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -53,24 +55,36 @@ class _ChatsScreenState extends State<ComunidadScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 200),
+            constraints: const BoxConstraints(minHeight: 300),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 16),
                 const Text(
-                  'Agregar contacto',
+                  'Escribir publicación',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 24),
                 TextField(
-                  controller: nameController,
+                  controller: titleController,
                   decoration: const InputDecoration(
-                    labelText: 'Nombre',
+                    labelText: 'Nombre de usuario',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(16),
                   ),
                 ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    labelText: 'Mensaje',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(16),
+                    alignLabelWithHint: true,
+                  ),
+                ),
+            
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -86,20 +100,23 @@ class _ChatsScreenState extends State<ComunidadScreen> {
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: () async {
-                        final name = nameController.text.trim();
-                        if (name.isNotEmpty) {
-                          await FirebaseFirestore.instance.collection('contacts').add({
-                            'name': name,
+                        final title = titleController.text.trim();
+                        final description = descriptionController.text.trim();
+
+                        if (title.isNotEmpty && description.isNotEmpty) {
+                          await FirebaseFirestore.instance.collection('publicacion').add({
+                            'usuario': title,
+                            'mensaje': description,
                             'timestamp': FieldValue.serverTimestamp(),
                           });
-                          final messenger = ScaffoldMessenger.of(context);
+
                           Navigator.pop(context);
-                          messenger.showSnackBar(
-                            const SnackBar(content: Text('Contacto agregado correctamente')),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Producto agregado correctamente')),
                           );
                         }
                       },
-                      child: const Text('Guardar'),
+                      child: const Text('Publicar'),
                     ),
                   ],
                 ),
@@ -111,107 +128,16 @@ class _ChatsScreenState extends State<ComunidadScreen> {
     );
   }
 
-  void _editContact(BuildContext context, String docId, String currentName) async {
-    final nameController = TextEditingController(text: currentName);
+  
 
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 200),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 16),
-                const Text(
-                  'Editar contacto',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancelar'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      onPressed: () async {
-                        final newName = nameController.text.trim();
-                        if (newName.isNotEmpty) {
-                          await FirebaseFirestore.instance
-                              .collection('contacts')
-                              .doc(docId)
-                              .update({'name': newName});
-                          final messenger = ScaffoldMessenger.of(context);
-                          Navigator.pop(context);
-                          messenger.showSnackBar(
-                            const SnackBar(content: Text('Contacto actualizado correctamente')),
-                          );
-                        }
-                      },
-                      child: const Text('Guardar'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _deleteContact(BuildContext context, String docId) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Eliminar contacto'),
-        content: const Text('¿Estás seguro de que quieres eliminar este contacto?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Eliminar'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm == true) {
-      await FirebaseFirestore.instance.collection('contacts').doc(docId).delete();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contacto eliminado correctamente')),
-      );
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        title: const Text('Whatsapp', style: TextStyle(color: Colors.white)),
+        title: const Text('Comunidad', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
@@ -246,11 +172,139 @@ class _ChatsScreenState extends State<ComunidadScreen> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _addContact(context),
-        child: const Icon(Icons.add),
-      ),
+      
+body: SingleChildScrollView( 
+  
+  //Pa que el scroll funcionee
+
+child: Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+
+  children: <Widget>[
+
+
+//PRIMERA CARD - PREGUNTA SOBRE EL PRODUCTACOOO
+    Card(
+      margin: const EdgeInsets.all(20),
+  child: Padding(
+    padding: const EdgeInsets.all( 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        Row(
+          children: [
+            Image.asset(
+              'assets/ellipse_1.png', width: 50, height: 50,), //Foto de perfil 1
+            SizedBox(width: 30), //E S P A C I O PAL LADO
+            Text(
+              "Sofia Aguilera",
+              style: TextStyle( fontSize: 18, fontWeight: FontWeight.bold, ), 
+              ), //Estilaso de la letra perfil: Tamaño, negritaaaa
+              SizedBox(height: 70), //E S P A C I O PA ABAJO
+          ],
+        ),
+
+        Image.asset('assets/productoforo.png', width: double.infinity, fit: BoxFit.cover, height: 200,), //Foto productooooooo, el doble infinito y el boxfit para que complete el ancho de la card y la altura limitada pa que no se vea tan M A L
+   SizedBox(height: 20), //E S P A C I O PA ABAJOOO OTRA VEZ
+
+        Text(
+          "Busco algo parecido a este collar, alguien que sepa si lo venden por aca, gracias",
+          style: TextStyle(fontSize: 14), 
+        ),
+      ],
+    ),
+  ),
+),
+
+//FINAL DE PRIMERA CARD
+
+//INICIO SEGUNDA CARD
+
+Card(
+   margin: const EdgeInsets.all(20), //Bordee
+
+  child: Padding(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        Row(
+          children: [
+            Image.asset(
+              'assets/perfil.png', width: 50, height: 50,), //Foto de perfil 2 + tamañoo
+            SizedBox(width: 30), //E S P A C I O PAL LADO
+            Text(
+              "Francisca Herz",
+              style: TextStyle( fontSize: 18, fontWeight: FontWeight.bold, ), 
+              ), //Estilaso de la letra perfil: Tamaño, negritaaaa
+              SizedBox(height: 70), //E S P A C I O PA ABAJO
+          ],
+        ),
+
+        
+        Text(
+          "¿Alguien que este vendiendo anillos de plata baratos y con envio?",
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    ),
+  ),
+),
+
+ //FINAL CARD 2
+ 
+ //INICIO CARD TREH
+
+Card(
+   margin: const EdgeInsets.all(20), //bordee
+
+  child: Padding(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        
+        Row(
+          children: [
+            Image.asset(
+              'assets/masperfil.png', width: 50, height: 50,), //Foto de perfil treh + tamañoo
+            SizedBox(width: 30), //E S P A C I O PAL LADO
+            Text(
+              "Andrés Figueroa",
+              style: TextStyle( fontSize: 18, fontWeight: FontWeight.bold, ), 
+              ), //Estilaso de la letra perfil: Tamaño, negritaaaa
+              SizedBox(height: 70), //E S P A C I O PA ABAJO
+          ],
+        ),
+
+        
+        Text(
+          "¿Si quiero vender un producto es necesario que coloqué mi ubicación o puedo hacerlo sin ponerla?, que es para vender una cosa rapida",
+          style: TextStyle(fontSize: 14),
+        ),
+      ],
+    ),
+  ),
+),
+
+ //FINAL CARD T R E H
+ 
+
+  ],
+  ),
+
+),
+ 
+floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! ENCONTRE EL MEDIO VIDEO DE COMO LO EXPLICAN Y ME SALIO A LA PRIMERA S O Y F E L I Z C:
+    backgroundColor: Color.fromARGB(255, 65, 185, 225), //color del fondo del boton
+     shape: CircleBorder(), //Para que sea redondo el boton
+    child: const Icon(Icons.add, color: Colors.white), //Icono del boton y el color del icono
+    onPressed: () => _addPublicacion(context),
+  ),
+
+     
      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
@@ -259,11 +313,11 @@ class _ChatsScreenState extends State<ComunidadScreen> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.category),
-            label: 'Otros',
+            label: 'Foro',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
-            label: 'Chats',
+            label: 'Comunidad',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
@@ -275,72 +329,7 @@ class _ChatsScreenState extends State<ComunidadScreen> {
     );
   }
 
-  Widget _buildBody() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('contacts')
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error al cargar contactos'));
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final docs = snapshot.data!.docs;
-
-        if (docs.isEmpty) {
-          return const Center(child: Text('No hay contactos registrados'));
-        }
-
-        return ListView.builder(
-          itemCount: docs.length,
-          itemBuilder: (context, index) {
-            final doc = docs[index];
-            final data = doc.data() as Map<String, dynamic>;
-            final name = data['name'] ?? 'Sin nombre';
-            final initial = name.isNotEmpty ? name[0] : '?';
-
-            return ListTile(
-              leading: CircleAvatar(child: Text(initial)),
-              title: Text(name, style: const TextStyle(color: Colors.black)),
-              trailing: PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert),
-                onSelected: (value) {
-                  if (value == 'editar') {
-                    _editContact(context, doc.id, name);
-                  } else if (value == 'eliminar') {
-                    _deleteContact(context, doc.id);
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'editar',
-                    child: Text('Editar'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'eliminar',
-                    child: Text('Eliminar'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  
 }
 
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Pantalla "Otros" aún no implementada')),
-    );
-  }
-}

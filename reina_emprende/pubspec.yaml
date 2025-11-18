@@ -32,13 +32,15 @@ dev_dependencies:
     sdk: flutter
 
 
-
   flutter_lints: ^5.0.0
 
 
 flutter:
-
-
   uses-material-design: true
 
-
+  assets:
+  - assets/logo-lareina.png
+  - assets/productoforo.png
+  - assets/ellipse_1.png
+  - assets/perfil.png
+  - assets/masperfil.png

@@ -45,15 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
             milliseconds: 500,
           ), // Duración de la animación
           opacity: opacity,
-          child: Text(
-            'Municipalidad de La Reina',
-            style: TextStyle(
-              fontSize: 24,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onPrimary, // Usar el color de texto definido en el tema
-            ),
-          ),
+          child: Image.asset("assets/logo-lareina.png"),
         ),
       ),
     );
