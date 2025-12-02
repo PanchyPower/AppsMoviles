@@ -223,8 +223,8 @@ floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! EN
             label: 'Inicio',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Color(0xFFB4E6FF)),
-            label: 'Buscar',
+            icon: Icon(Icons.account_circle, color: Color(0xFFB4E6FF)),
+            label: 'Perfil',
           ),
         ],
 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reina_emprende/screens/comunidad.dart';
 import 'package:flutter/foundation.dart';   // <-- NECESARIO PARA kIsWeb
 import 'dart:io';
 
@@ -116,10 +117,14 @@ class _PublicacionPageState extends State<PublicacionPage> {
              SizedBox(height: 20),
 
             //BOTONACO DE PUBLICACIÓN
-            SizedBox(width: double.infinity, child: FloatingActionButton.extended(onPressed: () {
-                  
+            SizedBox(width: double.infinity, child: FloatingActionButton.extended(
+              onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ComunidadScreen()),
+            ),
                   // PUCHALE EL FIREBASE REINOTA
-                },
+                
+                
                 label: const Text(
                   "PUBLICAR",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),

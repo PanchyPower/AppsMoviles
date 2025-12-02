@@ -17,6 +17,7 @@ class ForoScreen extends StatefulWidget {
 class _ForoScreenState extends State<ForoScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
+
   int _currentIndex = 0;
 
   void _onTabTapped(int index) {
@@ -251,6 +252,11 @@ class _ForoScreenState extends State<ForoScreen> {
     }
   }
 
+   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
   
 
   @override
@@ -294,7 +300,15 @@ class _ForoScreenState extends State<ForoScreen> {
       ),
       backgroundColor: Colors.white,
 
-      body: StreamBuilder<QuerySnapshot>(
+
+    floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! ENCONTRE EL MEDIO VIDEO DE COMO LO EXPLICAN Y ME SALIO A LA PRIMERA S O Y F E L I Z C:
+    backgroundColor: Color.fromARGB(255, 65, 185, 225), //color del fondo del boton
+     shape: CircleBorder(), //Para que sea redondo el boton
+    child: const Icon(Icons.add, color: Colors.white), //Icono del boton y el color del icono
+    onPressed: () => _addPublicacion(context),
+  ),
+
+  body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('products')
             .orderBy('timestamp', descending: true)
@@ -389,13 +403,6 @@ class _ForoScreenState extends State<ForoScreen> {
           );
         },
       ),
-
-      floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! ENCONTRE EL MEDIO VIDEO DE COMO LO EXPLICAN Y ME SALIO A LA PRIMERA S O Y F E L I Z C:
-    backgroundColor: Color.fromARGB(255, 65, 185, 225), //color del fondo del boton
-     shape: CircleBorder(), //Para que sea redondo el boton
-    child: const Icon(Icons.add, color: Colors.white), //Icono del boton y el color del icono
-    onPressed: () => _addPublicacion(context),
-  ),
      
      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -413,8 +420,8 @@ class _ForoScreenState extends State<ForoScreen> {
             label: 'Inicio',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Color(0xFFB4E6FF)),
-            label: 'Buscar',
+            icon: Icon(Icons.account_circle, color: Color(0xFFB4E6FF)),
+            label: 'Perfil',
           ),
         ],
 ),
@@ -425,13 +432,3 @@ class _ForoScreenState extends State<ForoScreen> {
 
 }
 
-class PlaceholderScreen extends StatelessWidget {
-  const PlaceholderScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Pantalla "Otros" aún no implementada')),
-    );
-  }
-}

@@ -72,7 +72,8 @@ class _IntroScreenState extends State<IntroScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.account_circle, size: 120, color: Colors.grey),
+            Image.asset('assets/otroperfil.png', width: 200, scale: 0.3,
+),
 
             const SizedBox(height: 12),
 
