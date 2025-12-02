@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:reina_emprende/screens/comunidad.dart';
-import 'package:reina_emprende/main.dart'; // Para HomeScreen
+import 'package:reina_emprende/main.dart';
+import 'package:reina_emprende/screens/login.dart'; // Para HomeScreen
 
 // Configuracion inicio sesion google
 
@@ -91,7 +91,7 @@ class _IntroScreenState extends State<IntroScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const ComunidadScreen()),
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
           },
 
@@ -132,7 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const ComunidadScreen()),
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
             );
           },
             child: Container(

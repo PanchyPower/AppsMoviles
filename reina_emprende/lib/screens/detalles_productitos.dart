@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class DetailProductScreen extends StatelessWidget {
+class DetallesScreen extends StatelessWidget {
   final String title;
   final String description;
   final double price;
 
-  const DetailProductScreen({
+  const DetallesScreen({
     super.key,
     required this.title,
     required this.description,

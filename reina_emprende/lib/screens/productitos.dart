@@ -330,7 +330,7 @@ void _onTabTapped(int index) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => DetailProductScreen(
+                        builder: (_) => DetallesScreen(
                           title: title,
                           description: description,
                           price: price,
@@ -380,26 +380,30 @@ void _onTabTapped(int index) {
           );
         },
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).colorScheme.primaryContainer,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Foro',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(Icons.groups, color: Color(0xFFB4E6FF)),
             label: 'Comunidad',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.home, color: Color(0xFFB4E6FF)),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Colors.white),
             label: 'Buscar',
           ),
         ],
-      ),
+),
+
+
     );
   }
 }

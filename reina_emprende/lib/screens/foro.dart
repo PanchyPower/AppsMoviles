@@ -4,6 +4,7 @@ import 'package:reina_emprende/screens/login.dart';
 import 'productitos.dart';
 import 'package:reina_emprende/screens/comunidad.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reina_emprende/screens/detalles_productitos.dart';
 
 class ForoScreen extends StatefulWidget {
   const ForoScreen({super.key});
@@ -15,6 +16,7 @@ class ForoScreen extends StatefulWidget {
 //BOTTOM BAR
 class _ForoScreenState extends State<ForoScreen> {
   final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
   int _currentIndex = 0;
 
   void _onTabTapped(int index) {
@@ -48,7 +50,6 @@ class _ForoScreenState extends State<ForoScreen> {
   void _addPublicacion(BuildContext context) async {
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
-    final priceController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -63,7 +64,92 @@ class _ForoScreenState extends State<ForoScreen> {
               children: [
                 const SizedBox(height: 16),
                 const Text(
-                  'Agregar producto',
+                  'Escribir publicación',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 24),
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre de usuario',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(16),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: descriptionController,
+                  maxLines: 4,
+                  decoration: const InputDecoration(
+                    labelText: 'Mensaje',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(16),
+                    alignLabelWithHint: true,
+                  ),
+                ),
+            
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancelar'),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      onPressed: () async {
+                        final title = titleController.text.trim();
+                        final description = descriptionController.text.trim();
+
+                        if (title.isNotEmpty && description.isNotEmpty) {
+                          await FirebaseFirestore.instance.collection('publicacion').add({
+                            'usuario': title,
+                            'mensaje': description,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Publicación subida correctamente')),
+                          );
+                        }
+                      },
+                      child: const Text('Publicar'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _editPublication(BuildContext context, String docId, Map<String, dynamic> data) async {
+    final titleController = TextEditingController(text: data['title']);
+    final descriptionController = TextEditingController(text: data['description']);
+    final priceController = TextEditingController(text: data['price'].toString());
+
+    await showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 300),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 16),
+                const Text(
+                  'Editar producto',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 24),
@@ -78,12 +164,20 @@ class _ForoScreenState extends State<ForoScreen> {
                 const SizedBox(height: 16),
                 TextField(
                   controller: descriptionController,
-                  maxLines: 4,
                   decoration: const InputDecoration(
                     labelText: 'Descripción',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(16),
-                    alignLabelWithHint: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Precio',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(16),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -106,16 +200,15 @@ class _ForoScreenState extends State<ForoScreen> {
                         final price = double.tryParse(priceController.text.trim());
 
                         if (title.isNotEmpty && description.isNotEmpty && price != null) {
-                          await FirebaseFirestore.instance.collection('products').add({
+                          await FirebaseFirestore.instance.collection('products').doc(docId).update({
                             'title': title,
                             'description': description,
                             'price': price,
-                            'timestamp': FieldValue.serverTimestamp(),
                           });
 
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Producto agregado correctamente')),
+                            const SnackBar(content: Text('Producto actualizado correctamente')),
                           );
                         }
                       },
@@ -131,80 +224,12 @@ class _ForoScreenState extends State<ForoScreen> {
     );
   }
 
-  void _editContact(BuildContext context, String docId, String currentName) async {
-    final nameController = TextEditingController(text: currentName);
-
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 200),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 16),
-                const Text(
-                  'Editar contacto',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancelar'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      onPressed: () async {
-                        final newName = nameController.text.trim();
-                        if (newName.isNotEmpty) {
-                          await FirebaseFirestore.instance
-                              .collection('contacts')
-                              .doc(docId)
-                              .update({'name': newName});
-                          final messenger = ScaffoldMessenger.of(context);
-                          Navigator.pop(context);
-                          messenger.showSnackBar(
-                            const SnackBar(content: Text('Contacto actualizado correctamente')),
-                          );
-                        }
-                      },
-                      child: const Text('Guardar'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _deleteContact(BuildContext context, String docId) async {
+    void _deletePublication(BuildContext context, String docId) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Eliminar contacto'),
-        content: const Text('¿Estás seguro de que quieres eliminar este contacto?'),
+        title: const Text('Eliminar producto'),
+        content: const Text('¿Estás seguro de que quieres eliminar este producto?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -219,12 +244,14 @@ class _ForoScreenState extends State<ForoScreen> {
     );
 
     if (confirm == true) {
-      await FirebaseFirestore.instance.collection('contacts').doc(docId).delete();
+      await FirebaseFirestore.instance.collection('products').doc(docId).delete();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Contacto eliminado correctamente')),
+        const SnackBar(content: Text('Producto eliminado correctamente')),
       );
     }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -253,7 +280,7 @@ class _ForoScreenState extends State<ForoScreen> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Buscar productos...',
+                    hintText: 'Buscar publicaciones...',
                     fillColor: Colors.white,
                     filled: true,
                     prefixIcon: const Icon(Icons.search),
@@ -266,28 +293,127 @@ class _ForoScreenState extends State<ForoScreen> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: _buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _addPublicacion(context),
-        child: const Icon(Icons.add),
+
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('products')
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error al cargar productos'));
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final docs = snapshot.data!.docs;
+          final filteredDocs = docs.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final title = (data['title'] ?? '').toString().toLowerCase();
+            return title.contains(_searchText);
+          }).toList();
+
+          if (filteredDocs.isEmpty) {
+            return const Center(child: Text('No hay publicaciones'));
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemCount: filteredDocs.length,
+            itemBuilder: (context, index) {
+              final doc = filteredDocs[index];
+              final data = doc.data() as Map<String, dynamic>;
+
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () {
+                    final title = data['title'] ?? 'Sin título';
+                    final description = data['description'] ?? 'Sin descripción';
+                    final price = (data['price'] ?? 0).toDouble();
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetallesScreen(
+                          title: title,
+                          description: description,
+                          price: price,
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    title: Text(
+                      data['title'] ?? '',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Text(data['description'] ?? ''),
+                        const SizedBox(height: 4),
+                        Text('\$${data['price']?.toStringAsFixed(2) ?? '0.00'}'),
+                      ],
+                    ),
+                    trailing: PopupMenuButton<String>(
+                      icon: const Icon(Icons.more_vert),
+                      onSelected: (value) {
+                        if (value == 'editar') {
+                          _editPublication(context, doc.id, data);
+                        } else if (value == 'eliminar') {
+                          _deletePublication(context, doc.id);
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'editar',
+                          child: Text('Editar'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'eliminar',
+                          child: Text('Eliminar'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
+
+      floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! ENCONTRE EL MEDIO VIDEO DE COMO LO EXPLICAN Y ME SALIO A LA PRIMERA S O Y F E L I Z C:
+    backgroundColor: Color.fromARGB(255, 65, 185, 225), //color del fondo del boton
+     shape: CircleBorder(), //Para que sea redondo el boton
+    child: const Icon(Icons.add, color: Colors.white), //Icono del boton y el color del icono
+    onPressed: () => _addPublicacion(context),
+  ),
      
      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).colorScheme.primaryContainer,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Foro',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(Icons.groups, color: Colors.white),
             label: 'Comunidad',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.home, color: Color(0xFFB4E6FF)),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Color(0xFFB4E6FF)),
             label: 'Buscar',
           ),
         ],
@@ -296,63 +422,7 @@ class _ForoScreenState extends State<ForoScreen> {
     );
   }
 
-  Widget _buildBody() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('contacts')
-          .orderBy('timestamp', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(child: Text('Error al cargar contactos'));
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
 
-        final docs = snapshot.data!.docs;
-
-        if (docs.isEmpty) {
-          return const Center(child: Text('No hay publicaciones'));
-        }
-
-        return ListView.builder(
-          itemCount: docs.length,
-          itemBuilder: (context, index) {
-            final doc = docs[index];
-            final data = doc.data() as Map<String, dynamic>;
-            final name = data['name'] ?? 'Sin nombre';
-            final initial = name.isNotEmpty ? name[0] : '?';
-
-            return ListTile(
-              leading: CircleAvatar(child: Text(initial)),
-              title: Text(name, style: const TextStyle(color: Colors.black)),
-              trailing: PopupMenuButton<String>(
-                icon: const Icon(Icons.more_vert),
-                onSelected: (value) {
-                  if (value == 'editar') {
-                    _editContact(context, doc.id, name);
-                  } else if (value == 'eliminar') {
-                    _deleteContact(context, doc.id);
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'editar',
-                    child: Text('Editar'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'eliminar',
-                    child: Text('Eliminar'),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }
 
 class PlaceholderScreen extends StatelessWidget {

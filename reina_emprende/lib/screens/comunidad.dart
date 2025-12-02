@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reina_emprende/screens/login.dart';
 import 'package:reina_emprende/screens/foro.dart';
 import 'productitos.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reina_emprende/screens/publicaciones.dart';
 
 class ComunidadScreen extends StatefulWidget {
   const ComunidadScreen({super.key});
@@ -13,7 +13,6 @@ class ComunidadScreen extends StatefulWidget {
 }
 
 class _ChatsScreenState extends State<ComunidadScreen> {
-  final TextEditingController _searchController = TextEditingController();
   int _currentIndex = 1;
 
   void _onTabTapped(int index) {
@@ -44,91 +43,6 @@ class _ChatsScreenState extends State<ComunidadScreen> {
     }
   }
 
-  void _addPublicacion(BuildContext context) async {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 300),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 16),
-                const Text(
-                  'Escribir publicación',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 24),
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre de usuario',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: descriptionController,
-                  maxLines: 4,
-                  decoration: const InputDecoration(
-                    labelText: 'Mensaje',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                    alignLabelWithHint: true,
-                  ),
-                ),
-            
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancelar'),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      onPressed: () async {
-                        final title = titleController.text.trim();
-                        final description = descriptionController.text.trim();
-
-                        if (title.isNotEmpty && description.isNotEmpty) {
-                          await FirebaseFirestore.instance.collection('publicacion').add({
-                            'usuario': title,
-                            'mensaje': description,
-                            'timestamp': FieldValue.serverTimestamp(),
-                          });
-
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Producto agregado correctamente')),
-                          );
-                        }
-                      },
-                      child: const Text('Publicar'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  
 
   
 
@@ -139,45 +53,23 @@ class _ChatsScreenState extends State<ComunidadScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Comunidad', style: TextStyle(color: Colors.white)),
         actions: [
+          Icon(Icons.shopping_cart, color: Colors.white),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: _signOut,
-          ),
+          ), 
         ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ProductsScreen()),
-                );
-              },
-              child: AbsorbPointer(
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Buscar productos...',
-                    fillColor: Colors.white,
-                    filled: true,
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        
       ),
+
+      
       backgroundColor: Colors.white,
       
-body: SingleChildScrollView( 
+body: ListView( 
   
   //Pa que el scroll funcionee
 
-child: Column(
+children:  [Column(
   mainAxisAlignment: MainAxisAlignment.center,
 
   children: <Widget>[
@@ -295,32 +187,43 @@ Card(
   ],
   ),
 
+]
+
 ),
+
+
+
+
+
  
 floatingActionButton: FloatingActionButton( //BOTON BACAN QUE FLOTA - PAN!!!! ENCONTRE EL MEDIO VIDEO DE COMO LO EXPLICAN Y ME SALIO A LA PRIMERA S O Y F E L I Z C:
     backgroundColor: Color.fromARGB(255, 65, 185, 225), //color del fondo del boton
      shape: CircleBorder(), //Para que sea redondo el boton
     child: const Icon(Icons.add, color: Colors.white), //Icono del boton y el color del icono
-    onPressed: () => _addPublicacion(context),
+    onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PublicacionPage()),
+            ),
   ),
 
      
      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Theme.of(context).colorScheme.primaryContainer,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Foro',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(Icons.groups, color: Color(0xFFB4E6FF)),
             label: 'Comunidad',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.home, color: Colors.white),
+            label: 'Inicio',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Color(0xFFB4E6FF)),
             label: 'Buscar',
           ),
         ],
