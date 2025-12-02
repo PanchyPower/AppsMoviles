@@ -49,8 +49,8 @@ class _ForoScreenState extends State<ForoScreen> {
   }
 
   void _addPublicacion(BuildContext context) async {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
+    final usuarioController = TextEditingController();
+    final mensajeController = TextEditingController();
 
     await showDialog(
       context: context,
@@ -70,7 +70,7 @@ class _ForoScreenState extends State<ForoScreen> {
                 ),
                 const SizedBox(height: 24),
                 TextField(
-                  controller: titleController,
+                  controller: usuarioController,
                   decoration: const InputDecoration(
                     labelText: 'Nombre de usuario',
                     border: OutlineInputBorder(),
@@ -79,7 +79,7 @@ class _ForoScreenState extends State<ForoScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller: descriptionController,
+                  controller: mensajeController,
                   maxLines: 4,
                   decoration: const InputDecoration(
                     labelText: 'Mensaje',
@@ -104,13 +104,13 @@ class _ForoScreenState extends State<ForoScreen> {
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: () async {
-                        final title = titleController.text.trim();
-                        final description = descriptionController.text.trim();
+                        final usuario = usuarioController.text.trim();
+                        final mensaje = mensajeController.text.trim();
 
-                        if (title.isNotEmpty && description.isNotEmpty) {
+                        if (usuario.isNotEmpty && mensaje.isNotEmpty) {
                           await FirebaseFirestore.instance.collection('publicacion').add({
-                            'usuario': title,
-                            'mensaje': description,
+                            'usuario': usuario,
+                            'mensaje': mensaje,
                             'timestamp': FieldValue.serverTimestamp(),
                           });
 
@@ -133,9 +133,8 @@ class _ForoScreenState extends State<ForoScreen> {
   }
 
   void _editPublication(BuildContext context, String docId, Map<String, dynamic> data) async {
-    final titleController = TextEditingController(text: data['title']);
-    final descriptionController = TextEditingController(text: data['description']);
-    final priceController = TextEditingController(text: data['price'].toString());
+    final usuarioController = TextEditingController(text: data['usuario']);
+    final mensajeController = TextEditingController(text: data['mensaje']);
 
     await showDialog(
       context: context,
@@ -155,7 +154,7 @@ class _ForoScreenState extends State<ForoScreen> {
                 ),
                 const SizedBox(height: 24),
                 TextField(
-                  controller: titleController,
+                  controller: usuarioController,
                   decoration: const InputDecoration(
                     labelText: 'Título',
                     border: OutlineInputBorder(),
@@ -164,23 +163,14 @@ class _ForoScreenState extends State<ForoScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller: descriptionController,
+                  controller: mensajeController,
                   decoration: const InputDecoration(
                     labelText: 'Descripción',
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(16),
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: priceController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Precio',
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(16),
-                  ),
-                ),
+                
                 const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -196,15 +186,14 @@ class _ForoScreenState extends State<ForoScreen> {
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: () async {
-                        final title = titleController.text.trim();
-                        final description = descriptionController.text.trim();
-                        final price = double.tryParse(priceController.text.trim());
+                        final usuario = usuarioController.text.trim();
+                        final mensaje = mensajeController.text.trim();
 
-                        if (title.isNotEmpty && description.isNotEmpty && price != null) {
-                          await FirebaseFirestore.instance.collection('products').doc(docId).update({
-                            'title': title,
-                            'description': description,
-                            'price': price,
+
+                        if (usuario.isNotEmpty && mensaje.isNotEmpty) {
+                          await FirebaseFirestore.instance.collection('publicacion').doc(docId).update({
+                            'usuario': usuario,
+                            'mensajen': mensaje,
                           });
 
                           Navigator.pop(context);
@@ -245,7 +234,7 @@ class _ForoScreenState extends State<ForoScreen> {
     );
 
     if (confirm == true) {
-      await FirebaseFirestore.instance.collection('products').doc(docId).delete();
+      await FirebaseFirestore.instance.collection('publicacion').doc(docId).delete();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Producto eliminado correctamente')),
       );
@@ -310,7 +299,7 @@ class _ForoScreenState extends State<ForoScreen> {
 
   body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('products')
+            .collection('publicacion')
             .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -346,17 +335,16 @@ class _ForoScreenState extends State<ForoScreen> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(12),
                   onTap: () {
-                    final title = data['title'] ?? 'Sin título';
-                    final description = data['description'] ?? 'Sin descripción';
-                    final price = (data['price'] ?? 0).toDouble();
+                    final usuario = data['usuario'] ?? 'Sin título';
+                    final mensaje = data['mensaje'] ?? 'Sin descripción';
+
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => DetallesScreen(
-                          title: title,
-                          description: description,
-                          price: price,
+                          usuario: usuario,
+                          mensaje: mensaje,
                         ),
                       ),
                     );
@@ -364,16 +352,14 @@ class _ForoScreenState extends State<ForoScreen> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
                     title: Text(
-                      data['title'] ?? '',
+                      data['usuario'] ?? '',
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 4),
-                        Text(data['description'] ?? ''),
-                        const SizedBox(height: 4),
-                        Text('\$${data['price']?.toStringAsFixed(2) ?? '0.00'}'),
+                        Text(data['mensaje'] ?? ''),
                       ],
                     ),
                     trailing: PopupMenuButton<String>(

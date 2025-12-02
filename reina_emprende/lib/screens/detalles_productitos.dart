@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 class DetallesScreen extends StatelessWidget {
-  final String title;
-  final String description;
-  final double price;
+  final String usuario;
+  final String mensaje;
 
   const DetallesScreen({
     super.key,
-    required this.title,
-    required this.description,
-    required this.price,
+    required this.usuario,
+    required this.mensaje,
   });
 
   @override
@@ -29,23 +27,15 @@ class DetallesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title,
+              usuario,
               style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             Text(
-              description,
+              mensaje,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 32),
-            Text(
-              '\$${price.toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 22,
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
           ],
         ),
       ),
